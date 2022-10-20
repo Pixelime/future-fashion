@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 const MongoDB = require('./utils/MongoDB');
-const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
 
 const app = express();
 
@@ -21,7 +21,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 MongoDB.connect();
 
-app.use('/api', indexRouter);
+app.use(function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  next();
+});
+
+app.use('/api', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
