@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import {BrowserRouter, Routes, Route} from "react-router-dom";
+import {AppBar, Container, Toolbar, Typography} from "@mui/material";
+import {Provider} from 'react-redux';
+import store from './store';
+
+import Users from './components/Users';
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <Provider store={store}>
+            <BrowserRouter>
+                <Container maxWidth="sm">
+                    <AppBar position={"static"}>
+                        <Toolbar>
+                            <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
+                                Users
+                            </Typography>
+                        </Toolbar>
+                    </AppBar>
+                    <Routes>
+                        <Route path="/" exact element={<Users/>}/>
+                        {/*<Route path="/:id" component={User} />*/}
+                    </Routes>
+                </Container>
+            </BrowserRouter>
+        </Provider>
+    );
 }
 
 export default App;
