@@ -1,5 +1,15 @@
 import {Component, Fragment} from "react";
-import {Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText} from "@mui/material";
+import {
+    Avatar, Box, Container,
+    Divider, Fab,
+    List,
+    ListItem,
+    ListItemAvatar,
+    ListItemText, Stack,
+} from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
+
+import AppToolbar from "./AppToolbar";
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import {retrieveUsers} from '../actions/users';
@@ -17,7 +27,6 @@ class Users extends Component {
                 userInitials = `${user.firstname.charAt(0)}${user.lastname.charAt(0)}`,
                 userName = `${user.firstname} ${user.lastname}`,
                 userEntry = `Tot. Entries: ${user.entries}`;
-                // userEntry = `Tot. ${user.entries} - Last: 02/10/2022`;
 
             return (
                 <Fragment key={user._id}>
@@ -34,9 +43,15 @@ class Users extends Component {
 
         return (
             <Fragment>
+                <AppToolbar title="Users"/>
                 <List className="Users-list">
                     {users}
                 </List>
+                <Stack direction="row" justifyContent="flex-end" alignItems="center">
+                    <Fab color="primary" aria-label="add" href="/new-user">
+                        <AddIcon/>
+                    </Fab>
+                </Stack>
             </Fragment>
         );
     }

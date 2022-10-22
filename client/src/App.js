@@ -12,15 +12,9 @@ function App() {
         <Provider store={store}>
             <BrowserRouter>
                 <Container maxWidth="sm">
-                    <AppBar position={"static"}>
-                        <Toolbar>
-                            <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-                                Users
-                            </Typography>
-                        </Toolbar>
-                    </AppBar>
                     <Routes>
                         <Route path="/" exact element={<Users/>}/>
+                        <Route path="/new-user" element={<User isNew={true}/>}/>
                         <Route path="/:id" element={<User/>}/>
                     </Routes>
                 </Container>
