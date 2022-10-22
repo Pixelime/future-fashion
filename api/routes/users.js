@@ -6,11 +6,18 @@ const User = require('../models/User');
 
 /* Get all item */
 router.get('/users', async (req, res, next) => {
-    const {q} = req.query;
-    const filter = q ? {$or: [{firstname: new RegExp(q, 'i')}, {lastname: new RegExp(q, 'i')}]} : {active: true};
+    const {query} = req;
+    let filters = {};
+
+    if (query.active !== undefined){
+        filters = {...filters, active: query.active};
+    }
+    if (query.q !== undefined) {
+        filters = {...filters, $or: [{firstname: new RegExp(query.q, 'i')}, {lastname: new RegExp(query.q, 'i')}]}
+    }
 
     try {
-        const users = await User.find(filter).sort({lastname: 1});
+        const users = await User.find(filters).sort({lastname: 1});
         res.json(users);
     } catch (err) {
         console.error(err);
@@ -53,7 +60,7 @@ router.put('/users/:id', async (req, res, next) => {
     delete body._id;
 
     try {
-        const user = await User.findOneAndUpdate({_id: id}, {...body, active: true}, {new: true});
+        const user = await User.findOneAndUpdate({_id: id}, {...body}, {new: true});
         !user ? res.status(404).json({error: `User with id=${id} not found!`}) : res.json(user);
     } catch (err) {
         console.error(err);
