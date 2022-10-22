@@ -3,9 +3,9 @@ import * as TYPES from './types';
 
 import UserService from "../services/UserService";
 
-export const retrieveUsers = () => async (dispatch) => {
+export const retrieveUsers = (filters = {}) => async (dispatch) => {
     try {
-        const res = await UserService.getAll();
+        const res = await UserService.getAll(filters);
 
         dispatch({
             type: TYPES.RETRIEVE_USERS,

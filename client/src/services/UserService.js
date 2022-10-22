@@ -1,8 +1,8 @@
 import api from '../api';
 
-class UserService{
-    getAll() {
-        return api.get("/users");
+class UserService {
+    getAll(params = {}) {
+        return api.get("/users", {params});
     }
 
     get(id) {

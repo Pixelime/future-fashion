@@ -1,11 +1,11 @@
 import {Component, Fragment} from "react";
 import {
-    Avatar, Box, Container,
-    Divider, Fab,
+    Avatar, Box, Button, Container,
+    Divider, Fab, FormControlLabel,
     List,
     ListItem,
     ListItemAvatar,
-    ListItemText, Stack,
+    ListItemText, Stack, Switch,
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 
@@ -16,8 +16,18 @@ import {retrieveUsers} from '../actions/users';
 
 class Users extends Component {
 
+    constructor(props) {
+        super(props);
+
+        this.onShowDisabled = this.onShowDisabled.bind(this);
+    }
+
     componentDidMount() {
-        this.props.retrieveUsers();
+        this.props.retrieveUsers({active: true});
+    }
+
+    onShowDisabled() {
+        this.props.retrieveUsers({active: false});
     }
 
     render() {
@@ -43,7 +53,12 @@ class Users extends Component {
 
         return (
             <Fragment>
-                <AppToolbar title="Users"/>
+                <AppToolbar title="Users"
+                            action={<FormControlLabel
+                                control={<Switch color="default" onClick={this.onShowDisabled}/>}
+                                label="Show disabled"
+                                labelPlacement="start"
+                            />}/>
                 <List className="Users-list">
                     {users}
                 </List>

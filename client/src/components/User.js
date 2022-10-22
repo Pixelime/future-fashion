@@ -2,7 +2,18 @@ import {Component, Fragment} from "react";
 import {useParams, useNavigate} from "react-router-dom";
 import {connect} from "react-redux";
 import {retrieveUser, createUser, updateUser, deleteUser} from "../actions/users";
-import {Box, Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField} from "@mui/material";
+import {
+    Box,
+    Button,
+    Checkbox,
+    FormControl,
+    FormControlLabel,
+    InputLabel,
+    MenuItem,
+    Select,
+    Stack,
+    TextField
+} from "@mui/material";
 import AppToolbar from "./AppToolbar";
 
 class User extends Component {
@@ -15,11 +26,13 @@ class User extends Component {
                 firstname: '',
                 lastname: '',
                 entries: 0,
-                gender: 'M'
+                gender: 'M',
+                active: true
             }
         };
 
         this.onDeleteItem = this.onDeleteItem.bind(this);
+        this.onActivateItem = this.onActivateItem.bind(this);
         this.onSaveItem = this.onSaveItem.bind(this);
         this.handleChange = this.handleChange.bind(this);
 
@@ -56,6 +69,14 @@ class User extends Component {
             return;
         }
         await this.props.deleteUser(this._getCurrentId());
+        this.props.navigate('/');
+    }
+
+    async onActivateItem(){
+        if (this.props.isNew) {
+            return;
+        }
+        await this.props.updateUser(this._getCurrentId(), {active: true});
         this.props.navigate('/');
     }
 
@@ -115,9 +136,16 @@ class User extends Component {
                         </Select>
                     </FormControl>
                     <FormControl fullWidth margin="normal">
+                        <FormControlLabel disabled control={<Checkbox id="active" name="active" checked={user.active} />} label="Active" />
+                    </FormControl>
+                    <FormControl fullWidth margin="normal">
                         <Stack direction="row" spacing={2} justifyContent="flex-end" alignItems="center">
-                            {isNew ? null :
-                                <Button variant="outlined" color="error" onClick={this.onDeleteItem}>Delete</Button>}
+                            {
+                                isNew ? null :
+                                    user.active ?
+                                        <Button variant="outlined" color="error" onClick={this.onDeleteItem}>Delete</Button> :
+                                        <Button variant="outlined" color="success" onClick={this.onActivateItem}>Activate</Button>
+                            }
                             <Button variant="contained" onClick={this.onSaveItem}>Save</Button>
                         </Stack>
                     </FormControl>
