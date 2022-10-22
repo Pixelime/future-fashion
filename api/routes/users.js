@@ -7,7 +7,7 @@ const User = require('../models/User');
 /* Get all item */
 router.get('/users', async (req, res, next) => {
     const {q} = req.query;
-    const filter = q ? {$or: [{firstname: new RegExp(q, 'i')}, {lastname: new RegExp(q, 'i')}]} : {};
+    const filter = q ? {$or: [{firstname: new RegExp(q, 'i')}, {lastname: new RegExp(q, 'i')}]} : {active: true};
 
     try {
         const users = await User.find(filter).sort({lastname: 1});
