@@ -1,36 +1,27 @@
-import {
-    CREATE_USER,
-    RETRIEVE_USERS,
-    UPDATE_USER,
-    DELETE_USER
-} from '../actions/types';
+import * as TYPES from '../actions/types';
 
 const initialState = [];
 
 function userReducer(users = initialState, action) {
-    const { type, payload } = action;
+    const {type, payload} = action;
 
     switch (type) {
-        case CREATE_USER:
-            return [...users, payload];
-
-        case RETRIEVE_USERS:
+        case TYPES.RETRIEVE_USERS:
             return payload;
 
-        case UPDATE_USER:
-            return users.map((user) => {
-                if (user._id === payload._id) {
-                    return {
-                        ...user,
-                        ...payload,
-                    };
-                } else {
-                    return user;
-                }
-            });
+        case TYPES.RETRIEVE_USER:
+            return users.length > 0 ?
+                users.map((user) => (user._id === payload._id) ? payload : user) :
+                [payload];
 
-        case DELETE_USER:
-            return users.filter(({ id }) => id !== payload._id);
+        case TYPES.CREATE_USER:
+            return [...users, payload];
+
+        case TYPES.UPDATE_USER:
+            return users.map((user) => (user._id === payload._id) ? {...user, ...payload} : user)
+
+        case TYPES.DELETE_USER:
+            return users.filter(({id}) => id !== payload._id);
 
         default:
             return users;

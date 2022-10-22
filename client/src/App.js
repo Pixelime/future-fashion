@@ -4,6 +4,7 @@ import {Provider} from 'react-redux';
 import store from './store';
 
 import Users from './components/Users';
+import User from './components/User';
 
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
                     </AppBar>
                     <Routes>
                         <Route path="/" exact element={<Users/>}/>
-                        {/*<Route path="/:id" component={User} />*/}
+                        <Route path="/:id" element={<User/>}/>
                     </Routes>
                 </Container>
             </BrowserRouter>

@@ -1,9 +1,7 @@
 import {Component, Fragment} from "react";
 import {Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText} from "@mui/material";
 import {Link} from "react-router-dom";
-
 import {connect} from "react-redux";
-
 import {retrieveUsers} from '../actions/users';
 
 class Users extends Component {
@@ -13,7 +11,6 @@ class Users extends Component {
     }
 
     render() {
-        console.log("rendere");
         const users = this.props.users.map(user => {
 
             const url = `/${user._id}`,

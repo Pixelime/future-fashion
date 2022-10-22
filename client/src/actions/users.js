@@ -1,18 +1,46 @@
-import {
-    CREATE_USER,
-    RETRIEVE_USERS,
-    UPDATE_USER,
-    DELETE_USER
-} from './types';
+import * as TYPES from './types';
+
 
 import UserService from "../services/UserService";
+
+export const retrieveUsers = () => async (dispatch) => {
+    try {
+        const res = await UserService.getAll();
+
+        dispatch({
+            type: TYPES.RETRIEVE_USERS,
+            payload: res.data,
+        });
+
+        return Promise.resolve(res.data);
+    } catch (err) {
+        console.log(err);
+        return Promise.reject(err);
+    }
+};
+
+export const retrieveUser = (id) => async (dispatch) => {
+    try {
+        const res = await UserService.get(id);
+
+        dispatch({
+            type: TYPES.RETRIEVE_USER,
+            payload: res.data,
+        });
+
+        return Promise.resolve(res.data);
+    } catch (err) {
+        console.log(err);
+        return Promise.reject(err);
+    }
+};
 
 export const createUser = (data) => async (dispatch) => {
     try {
         const res = await UserService.create(data);
 
         dispatch({
-            type: CREATE_USER,
+            type: TYPES.CREATE_USER,
             payload: res.data,
         });
 
@@ -22,30 +50,18 @@ export const createUser = (data) => async (dispatch) => {
     }
 };
 
-export const retrieveUsers = () => async (dispatch) => {
-    try {
-        const res = await UserService.getAll();
-
-        dispatch({
-            type: RETRIEVE_USERS,
-            payload: res.data,
-        });
-    } catch (err) {
-        console.log(err);
-    }
-};
-
 export const updateUser = (id, data) => async (dispatch) => {
     try {
         const res = await UserService.update(id, data);
 
         dispatch({
-            type: UPDATE_USER,
-            payload: data,
+            type: TYPES.UPDATE_USER,
+            payload: res.data,
         });
 
         return Promise.resolve(res.data);
     } catch (err) {
+        console.log(err);
         return Promise.reject(err);
     }
 };
@@ -55,10 +71,13 @@ export const deleteUser = (id) => async (dispatch) => {
         await UserService.delete(id);
 
         dispatch({
-            type: DELETE_USER,
+            type: TYPES.DELETE_USER,
             payload: {id},
         });
+
+        return Promise.resolve(id);
     } catch (err) {
         console.log(err);
+        return Promise.reject(err);
     }
 };
