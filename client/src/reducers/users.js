@@ -2,7 +2,7 @@ import * as TYPES from '../actions/types';
 
 const initialState = [];
 
-function userReducer(users = initialState, action) {
+function reducer(users = initialState, action) {
     const {type, payload} = action;
 
     switch (type) {
@@ -28,4 +28,4 @@ function userReducer(users = initialState, action) {
     }
 }
 
-export default userReducer;
+export default reducer;

@@ -1,10 +1,15 @@
 import * as TYPES from './types';
 
-
 import UserService from "../services/UserService";
 
 export const retrieveUsers = (filters = {}) => async (dispatch) => {
     try {
+
+        dispatch({
+            type: TYPES.USERS_LIST_FILTERS,
+            payload: filters
+        });
+
         const res = await UserService.getAll(filters);
 
         dispatch({
