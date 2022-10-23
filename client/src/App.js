@@ -11,7 +11,7 @@ function App() {
     return (
         <Provider store={store}>
             <BrowserRouter>
-                <Container maxWidth="sm">
+                <Container maxWidth="md">
                     <Routes>
                         <Route path="/" exact element={<Users/>}/>
                         <Route path="/new-user" element={<User isNew={true}/>}/>

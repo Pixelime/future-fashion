@@ -26,8 +26,9 @@ class Users extends Component {
         this.props.retrieveUsers({active: true});
     }
 
-    onShowDisabled() {
-        this.props.retrieveUsers({active: false});
+    onShowDisabled(event) {
+        const {target} = event;
+        this.props.retrieveUsers({active: !target.checked});
     }
 
     render() {
@@ -36,15 +37,22 @@ class Users extends Component {
             const url = `/${user._id}`,
                 userInitials = `${user.firstname.charAt(0)}${user.lastname.charAt(0)}`,
                 userName = `${user.firstname} ${user.lastname}`,
-                userEntry = `Tot. Entries: ${user.entries}`;
+                userEntry = `Tot. Entries: ${user.entries}`,
+                isActive = user.active;
 
             return (
                 <Fragment key={user._id}>
-                    <ListItem className="User-link" alignItems="flex-start" component={Link} to={url}>
+                    <ListItem alignItems="flex-start" component={Link} to={url}>
                         <ListItemAvatar>
-                            <Avatar className="User-avatar">{userInitials}</Avatar>
+                            <Avatar variant={isActive ? 'circular' : 'square'}>{userInitials}</Avatar>
                         </ListItemAvatar>
-                        <ListItemText className="User-text" primary={userName} secondary={userEntry}/>
+                        <ListItemText
+                            className="User-text"
+                            primary={userName}
+                            primaryTypographyProps={isActive ? null : {fontStyle: "italic"}}
+                            secondary={userEntry}
+                            secondaryTypographyProps={isActive ? null : {fontStyle: "italic"}}
+                        />
                     </ListItem>
                     <Divider variant="inset" component="li"/>
                 </Fragment>
