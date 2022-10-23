@@ -3,6 +3,7 @@ import {useParams, useNavigate} from "react-router-dom";
 import {connect} from "react-redux";
 import {retrieveUser, createUser, updateUser, deleteUser} from "../actions/users";
 import {
+    Alert,
     Box,
     Button,
     Checkbox,
@@ -22,6 +23,7 @@ class User extends Component {
         super(props);
 
         this.state = {
+            errorMessage: null,
             user: {
                 firstname: '',
                 lastname: '',
@@ -55,29 +57,40 @@ class User extends Component {
         this.setState({user: {...this.state.user, ...{[target.name]: target.value}}})
     }
 
-    async onSaveItem() {
-        const userData = this.state.user;
-        await this.props.isNew ?
-            this.props.createUser(userData) :
-            this.props.updateUser(this._getCurrentId(), userData);
+    _handleResponse(promise) {
+        promise.then(() => {
+            this.props.navigate('/');
+        }).catch((err) => {
+            const message = err.response.data.error;
+            this.setState({errorMessage: message || err.message});
+        })
+    }
 
-        this.props.navigate('/');
+    onSaveItem() {
+        const userData = this.state.user;
+        this._handleResponse(
+            this.props.isNew ?
+                this.props.createUser(userData) :
+                this.props.updateUser(this._getCurrentId(), userData)
+        );
     }
 
     async onDeleteItem() {
         if (this.props.isNew) {
             return;
         }
-        await this.props.deleteUser(this._getCurrentId());
-        this.props.navigate('/');
+        this._handleResponse(
+            this.props.deleteUser(this._getCurrentId())
+        );
     }
 
-    async onActivateItem(){
+    async onActivateItem() {
         if (this.props.isNew) {
             return;
         }
-        await this.props.updateUser(this._getCurrentId(), {active: true});
-        this.props.navigate('/');
+        this._handleResponse(
+            this.props.updateUser(this._getCurrentId(), {active: true})
+        );
     }
 
     render() {
@@ -88,6 +101,7 @@ class User extends Component {
             <Fragment>
                 <AppToolbar title={isNew ? `New User` : `User - ${user.firstname} ${user.lastname}`}/>
                 <Box component="form" id="user-form">
+                    {this.state.errorMessage ? <Alert severity="error">{this.state.errorMessage}</Alert> : null}
                     <FormControl fullWidth>
                         <TextField
                             id="firstname"
@@ -136,15 +150,18 @@ class User extends Component {
                         </Select>
                     </FormControl>
                     <FormControl fullWidth margin="normal">
-                        <FormControlLabel disabled control={<Checkbox id="active" name="active" checked={user.active} />} label="Active" />
+                        <FormControlLabel disabled control={<Checkbox id="active" name="active" checked={user.active}/>}
+                                          label="Active"/>
                     </FormControl>
                     <FormControl fullWidth margin="normal">
                         <Stack direction="row" spacing={2} justifyContent="flex-end" alignItems="center">
                             {
                                 isNew ? null :
                                     user.active ?
-                                        <Button variant="outlined" color="error" onClick={this.onDeleteItem}>Delete</Button> :
-                                        <Button variant="outlined" color="success" onClick={this.onActivateItem}>Activate</Button>
+                                        <Button variant="outlined" color="error"
+                                                onClick={this.onDeleteItem}>Delete</Button> :
+                                        <Button variant="outlined" color="success"
+                                                onClick={this.onActivateItem}>Activate</Button>
                             }
                             <Button variant="contained" onClick={this.onSaveItem}>Save</Button>
                         </Stack>
@@ -169,4 +186,9 @@ function withNavigate(Component) {
     return props => <Component {...props} navigate={useNavigate()}/>;
 }
 
-export default connect(mapStateToProps, {retrieveUser, createUser, updateUser, deleteUser})(withNavigate(withParams(User)));
+export default connect(mapStateToProps, {
+    retrieveUser,
+    createUser,
+    updateUser,
+    deleteUser
+})(withNavigate(withParams(User)));
